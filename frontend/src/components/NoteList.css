@@ -1,0 +1,28 @@
+.note-list-container {
+  margin-top: 2rem;
+}
+
+.note-list-container h2 {
+  color: #667eea;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.empty-message {
+  text-align: center;
+  color: #999;
+  padding: 3rem;
+  font-size: 1.1rem;
+}
+
+.note-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .note-grid {
+    grid-template-columns: 1fr;
+  }
+}
