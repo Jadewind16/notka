@@ -5,6 +5,9 @@ BACKEND_DIR = backend
 FRONTEND_DIR = frontend
 REQ_DIR = .
 
+# Python executable
+PYTHON = python3
+
 FORCE:
 
 prod: all_tests github
@@ -17,15 +20,28 @@ all_tests: FORCE
 	cd $(BACKEND_DIR); make tests
 
 dev_env: FORCE
-	cd $(BACKEND_DIR); python -m venv venv
+	@echo "Setting up development environment..."
+	cd $(BACKEND_DIR); $(PYTHON) -m venv venv
 	cd $(BACKEND_DIR); . venv/bin/activate && pip install -r requirements-dev.txt
 	cd $(FRONTEND_DIR); npm install
+	@echo ""
+	@echo "✅ Development environment ready!"
+	@echo ""
 	@echo "Backend venv created at: backend/venv"
-	@echo "You should set PYTHONPATH to: "
-	@echo $(shell pwd)
+	@echo ""
+	@echo "To activate backend venv, run:"
+	@echo "  cd backend && source venv/bin/activate"
+	@echo ""
+	@echo "Or use the aliases:"
+	@echo "  notkabackend  - cd to backend and activate venv"
+	@echo "  notkarun      - run backend server"
+	@echo "  notkadev      - run frontend dev server"
+	@echo ""
+	@echo "Set PYTHONPATH for testing:"
+	@echo "  export PYTHONPATH=$(shell pwd)/backend"
 
 run_backend: FORCE
-	cd $(BACKEND_DIR); . venv/bin/activate && python run.py
+	cd $(BACKEND_DIR); . venv/bin/activate && $(PYTHON) run.py
 
 run_frontend: FORCE
 	cd $(FRONTEND_DIR); npm run dev

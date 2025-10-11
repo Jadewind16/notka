@@ -1,4 +1,5 @@
 PKG = app
+PYTHON = python3
 
 # Override to use venv
 export LINTER = ./venv/bin/flake8
@@ -17,14 +18,17 @@ lint: $(patsubst %.py,%.pylint,$(PYTHONFILES))
 	$(LINTER) $(PYLINTFLAGS) $*.py
 
 pytests: FORCE
-	. venv/bin/activate && pytest $(PYTESTFLAGS) --cov=$(PKG)
+	. venv/bin/activate && export PYTHONPATH=$(shell pwd) && pytest $(PYTESTFLAGS) --cov=$(PKG)
 
 run: FORCE
-	. venv/bin/activate && python run.py
+	. venv/bin/activate && export PYTHONPATH=$(shell pwd) && $(PYTHON) run.py
 
 install: FORCE
-	python -m venv venv
+	$(PYTHON) -m venv venv
 	. venv/bin/activate && pip install -r requirements-dev.txt
+	@echo "export PYTHONPATH=$(shell pwd)" >> venv/bin/activate
+	@echo ""
+	@echo "✅ Virtual environment created with PYTHONPATH set!"
 
 clean: FORCE
 	-rm -rf __pycache__

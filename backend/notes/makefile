@@ -1,4 +1,5 @@
 PKG = notes
+PYTHON = python3
 
 # Use backend venv
 export LINTER = ../venv/bin/flake8
@@ -6,6 +7,8 @@ export PYLINTFLAGS = --exclude=__main__.py
 
 PYTHONFILES = $(shell ls *.py 2>/dev/null)
 PYTESTFLAGS = -vv --verbose --cov-branch --cov-report term-missing --tb=short -W ignore::FutureWarning
+
+BACKEND_DIR = $(shell cd .. && pwd)
 
 FORCE:
 
@@ -17,4 +20,4 @@ lint: $(patsubst %.py,%.pylint,$(PYTHONFILES))
 	$(LINTER) $(PYLINTFLAGS) $*.py
 
 pytests: FORCE
-	cd .. && . venv/bin/activate && export PYTHONPATH=/home/jadewind/notka/backend && pytest $(PYTESTFLAGS) --cov=$(PKG)
+	cd .. && . venv/bin/activate && export PYTHONPATH=$(BACKEND_DIR) && pytest $(PYTESTFLAGS) --cov=$(PKG)
