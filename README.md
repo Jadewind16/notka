@@ -7,8 +7,9 @@ Notka helps students take notes and link them directly to specific pages or slid
 ## ✨ Key Features
 
 - 📝 **Quick Note Taking**: Create text notes with titles and content
-- 📎 **File Upload**: Attach PDFs, PowerPoints, and documents
-- 🔗 **Page Linking**: Reference specific pages/slides in your notes
+- 📎 **Multi-Format Upload**: PDFs, PowerPoints, images, and videos
+- 🎥 **Video Support**: Upload and embed lecture recordings (MP4, WebM, etc.)
+- 🔗 **Page Linking**: Reference specific pages/slides/timestamps in your notes
 - 👁️ **Embedded Viewer**: View files and jump to referenced pages instantly
 - 🗂️ **Organized Dashboard**: See all your notes in one place
 - 🚀 **Modern Stack**: Python FastAPI backend + React frontend
@@ -75,6 +76,30 @@ notka/
 - **Python 3.10+**
 - **Node.js 16+**
 - **MongoDB** (local or cloud)
+
+### Using Make Commands (Recommended)
+
+```bash
+# First time setup
+make dev_env
+
+# Run backend
+make run_backend
+
+# Run frontend (in another terminal)
+make run_frontend
+
+# Run all tests
+make all_tests
+
+# Deploy to production (tests + git push)
+make prod
+
+# Clean test data
+make clean_tests
+```
+
+### Manual Setup
 
 ### 1. Clone Repository
 

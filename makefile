@@ -1,8 +1,9 @@
 include common.mk
 
-# Our directories
+# Project directories (SE class pattern)
 BACKEND_DIR = backend
 FRONTEND_DIR = frontend
+NOTES_DIR = backend/notes
 REQ_DIR = .
 
 # Python executable
@@ -10,14 +11,20 @@ PYTHON = python3
 
 FORCE:
 
+# Production deployment: run all tests, then push to GitHub
 prod: all_tests github
 
+# Push to GitHub (SE class pattern)
 github: FORCE
 	- git commit -a
 	git push origin main
 
+# Run all tests across all modules (SE class pattern)
 all_tests: FORCE
+	@echo "🧪 Running all tests..."
 	cd $(BACKEND_DIR); make tests
+	cd $(NOTES_DIR); make tests
+	@echo "✅ All tests passed!"
 
 dev_env: FORCE
 	@echo "Setting up development environment..."
@@ -49,3 +56,8 @@ run_frontend: FORCE
 clean: FORCE
 	cd $(BACKEND_DIR); make clean
 	cd $(FRONTEND_DIR); make clean
+
+# Clean test data (test database + test files)
+clean_tests: FORCE
+	@echo "🧹 Cleaning test data..."
+	@./clean_test_data.sh

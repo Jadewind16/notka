@@ -1,11 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 from pathlib import Path
 
 from app.config import settings
-from app.services import db, note_service
+from app.services import db
 from app.routes import notes_router
 
 
@@ -14,7 +13,6 @@ async def lifespan(app: FastAPI):
     """Lifespan events for startup and shutdown."""
     # Startup
     await db.connect()
-    await note_service.initialize()
 
     # Ensure upload directory exists
     upload_dir = Path(settings.upload_dir)
@@ -46,9 +44,10 @@ app.add_middleware(
 )
 
 # Mount uploads directory for serving files
-upload_dir = Path(settings.upload_dir)
-if upload_dir.exists():
-    app.mount("/uploads", StaticFiles(directory=str(upload_dir)), name="uploads")
+# COMMENTED OUT: Using custom Range-supporting endpoint instead
+# upload_dir = Path(settings.upload_dir)
+# if upload_dir.exists():
+#     app.mount("/uploads", StaticFiles(directory=str(upload_dir)), name="uploads")
 
 # Include routers
 app.include_router(notes_router)

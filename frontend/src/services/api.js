@@ -50,6 +50,27 @@ export const noteAPI = {
     return response.data;
   },
 
+  // Add file to existing note
+  addFileToNote: async (id, file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    const response = await api.post(`/api/notes/${id}/file`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
+
+  // Delete a specific file from a note
+  deleteFileFromNote: async (id, filePath) => {
+    const response = await api.delete(`/api/notes/${id}/file`, {
+      data: { file_path: filePath }
+    });
+    return response.data;
+  },
+
   // Delete note
   deleteNote: async (id) => {
     await api.delete(`/api/notes/${id}`);
@@ -58,7 +79,18 @@ export const noteAPI = {
   // Get file URL for a note
   getFileUrl: (filePath) => {
     if (!filePath) return null;
-    return `${API_BASE_URL}/${filePath}`;
+    // Normalize path: remove '../' prefix if present (for backward compatibility)
+    // This handles both old '../uploads/...' and new 'uploads/...' paths
+    let normalizedPath = filePath;
+    if (normalizedPath.startsWith('../')) {
+      normalizedPath = normalizedPath.substring(3);
+    }
+    // Remove 'uploads/' prefix since the new endpoint adds it automatically
+    if (normalizedPath.startsWith('uploads/')) {
+      normalizedPath = normalizedPath.substring(8);
+    }
+    // Use the new Range-supporting endpoint for video seeking
+    return `${API_BASE_URL}/api/notes/serve/${normalizedPath}`;
   },
 };
 

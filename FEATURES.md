@@ -12,10 +12,12 @@ Notka is a study note management system that allows students to take notes and l
 
 ### 2. File Upload & Management
 - **Supported Formats**:
-  - PDF documents (textbooks, lecture notes)
-  - PowerPoint presentations (.ppt, .pptx)
-- **File Storage**: Secure file storage with uploaded materials linked to notes
-- **File Viewing**: Embedded file viewer to review materials without leaving the app
+  - **Documents**: PDF, PowerPoint (.ppt, .pptx), Word (.doc, .docx)
+  - **Images**: PNG, JPG, GIF, BMP, SVG, WebP
+  - **Videos**: MP4, WebM, OGG, MOV, AVI, MKV, M4V
+- **File Storage**: Secure local file storage with timestamped filenames
+- **File Viewing**: Embedded viewer for all supported formats
+- **Max File Size**: 100MB (suitable for lecture recordings)
 
 ### 3. Page/Slide Reference System (Key Feature)
 - **Page Linking**: Associate notes with specific page numbers in PDFs or slide numbers in presentations
@@ -32,6 +34,18 @@ Notka is a study note management system that allows students to take notes and l
 - **Delete Notes**: Remove notes and associated files
 - **File Preview**: Quick preview of linked files
 
+### 5. Video Support (NEW!)
+- **Upload Lecture Recordings**: Attach video files to your notes
+- **Embedded Playback**: Watch videos directly in the app
+- **Supported Formats**: MP4, WebM, OGG, MOV, AVI, MKV
+- **Large File Support**: Up to 100MB per file
+- **Timestamp Linking**: Reference specific moments in videos
+
+**Video Workflow:**
+1. Upload lecture recording (MP4)
+2. Create note: "Professor explained recursion" → Link to timestamp
+3. Review later: Click to watch the relevant section
+
 ## Planned Features (v2.0)
 
 ### Enhanced Note Management
@@ -44,10 +58,10 @@ Notka is a study note management system that allows students to take notes and l
 - **Collections**: Group related notes (e.g., "Midterm 1 Study Materials")
 - **Favorites**: Mark important notes for quick access
 
-### Advanced File Handling
+### Advanced Features
 - **Multiple Files per Note**: Link one note to multiple documents
-- **File Format Support**: Add support for Word docs, images, videos
 - **Annotations**: Highlight or annotate directly on PDFs
+- **Video Timestamps**: Click note to jump to exact moment in video
 
 ### Collaboration
 - **Share Notes**: Share individual notes or collections with classmates

@@ -1,24 +1,14 @@
+# Backend makefile - follows SE class pattern
 PKG = app
+include ../common.mk
+
+# Python executable
 PYTHON = python3
 
-# Override to use venv
+# Override to use venv linter
 export LINTER = ./venv/bin/flake8
-export PYLINTFLAGS = --exclude=__main__.py
-
-PYTHONFILES = $(shell ls *.py 2>/dev/null)
-PYTESTFLAGS = -vv --verbose --cov-branch --cov-report term-missing --tb=short -W ignore::FutureWarning
 
 FORCE:
-
-tests: lint pytests
-
-lint: $(patsubst %.py,%.pylint,$(PYTHONFILES))
-
-%.pylint:
-	$(LINTER) $(PYLINTFLAGS) $*.py
-
-pytests: FORCE
-	. venv/bin/activate && export PYTHONPATH=$(shell pwd) && pytest $(PYTESTFLAGS) --cov=$(PKG)
 
 run: FORCE
 	. venv/bin/activate && export PYTHONPATH=$(shell pwd) && $(PYTHON) run.py

@@ -12,7 +12,8 @@ from app.services.database import db
 ID = '_id'
 TITLE = 'title'
 CONTENT = 'content'
-FILE_PATH = 'file_path'
+FILE_PATH = 'file_path'  # Keep for backward compatibility
+FILES = 'files'  # New: array of file paths
 PAGE_NUMBER = 'page_number'
 CREATED_AT = 'created_at'
 
@@ -69,10 +70,18 @@ async def create(flds: dict) -> str:
         raise ValueError(f'Bad value for {title=}')
 
     # Prepare note document
+    file_path = flds.get(FILE_PATH)
+    files = flds.get(FILES, [])
+
+    # If file_path is provided but files is empty, migrate it to files array
+    if file_path and not files:
+        files = [file_path]
+
     note_doc = {
         TITLE: flds.get(TITLE),
         CONTENT: flds.get(CONTENT, ''),
-        FILE_PATH: flds.get(FILE_PATH),
+        FILE_PATH: file_path,  # Keep for backward compatibility
+        FILES: files,  # New files array
         PAGE_NUMBER: flds.get(PAGE_NUMBER),
         CREATED_AT: datetime.utcnow()
     }
@@ -95,6 +104,13 @@ async def get(note_id: str) -> Dict[str, Any]:
 
     # Convert ObjectId to string for JSON serialization
     note[ID] = str(note[ID])
+
+    # Migrate old file_path to files array for backward compatibility
+    if note.get(FILE_PATH) and not note.get(FILES):
+        note[FILES] = [note[FILE_PATH]]
+    elif not note.get(FILES):
+        note[FILES] = []
+
     return note
 
 
@@ -104,9 +120,15 @@ async def get_all() -> List[Dict[str, Any]]:
     cursor = collection.find().sort(CREATED_AT, -1)
     notes = await cursor.to_list(length=None)
 
-    # Convert ObjectIds to strings
+    # Convert ObjectIds to strings and migrate old file_path to files array
     for note in notes:
         note[ID] = str(note[ID])
+
+        # Migrate old file_path to files array for backward compatibility
+        if note.get(FILE_PATH) and not note.get(FILES):
+            note[FILES] = [note[FILE_PATH]]
+        elif not note.get(FILES):
+            note[FILES] = []
 
     return notes
 

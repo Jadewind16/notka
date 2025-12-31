@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 from bson import ObjectId
 
@@ -26,8 +26,9 @@ class NoteBase(BaseModel):
     """Base note model with common fields."""
 
     title: str = Field(..., min_length=1, max_length=200)
-    content: str = Field(..., min_length=1)
-    file_path: Optional[str] = None
+    content: str = Field(default='')  # Allow empty content
+    file_path: Optional[str] = None  # Keep for backward compatibility
+    files: Optional[List[str]] = Field(default_factory=list)  # New: support multiple files
     page_number: Optional[int] = Field(None, ge=1)
 
 
@@ -40,7 +41,7 @@ class NoteUpdate(BaseModel):
     """Model for updating an existing note."""
 
     title: Optional[str] = Field(None, min_length=1, max_length=200)
-    content: Optional[str] = Field(None, min_length=1)
+    content: Optional[str] = None  # Allow empty content in updates
     page_number: Optional[int] = Field(None, ge=1)
 
 

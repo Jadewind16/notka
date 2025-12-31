@@ -28,13 +28,20 @@ alias notkabackend='cd /home/jadewind/notka/backend && source venv/bin/activate'
 alias notkafrontend='cd /home/jadewind/notka/frontend'
 alias notkarun='cd /home/jadewind/notka/backend && source venv/bin/activate && python run.py'
 alias notkadev='cd /home/jadewind/notka/frontend && npm run dev'
+alias notkacleantests='/home/jadewind/notka/clean_test_data.sh'
 ```
 
 Usage:
 ```bash
-notkabackend  # cd to backend + activate venv (PYTHONPATH auto-set!)
-notkarun      # Start FastAPI backend
-notkadev      # Start React frontend
+notkabackend     # cd to backend + activate venv (PYTHONPATH auto-set!)
+notkarun         # Start FastAPI backend
+notkadev         # Start React frontend
+notkacleantests  # Clean test database + test files + Python cache
+```
+
+To activate aliases, run:
+```bash
+source ~/.bashrc
 ```
 
 ## Makefile Commands
@@ -44,10 +51,11 @@ notkadev      # Start React frontend
 ```bash
 make dev_env      # Setup dev environment (first time only)
 make all_tests    # Run all backend tests
-make prod         # Run tests + push to git
+make prod         # Run tests + commit + push to GitHub
 make run_backend  # Start backend server
 make run_frontend # Start frontend dev server
 make clean        # Clean all build artifacts
+make clean_tests  # Clean test database + test files
 ```
 
 ### Backend
