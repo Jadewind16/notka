@@ -1,0 +1,1473 @@
+/* ============================================
+   NOTEBOOKPAGE.CSS - Organized Structure
+   ============================================ */
+
+/* ============================================
+   1. ROOT & PAGE CONTAINER
+   ============================================ */
+.notebook-page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f4f6f9;
+  transition: background 0.3s ease;
+}
+
+/* ============================================
+   2. HEADER SECTION
+   ============================================ */
+.notebook-header {
+  background: white;
+  padding: 1rem 2rem;
+  border-bottom: 3px solid #667eea;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.notebook-info {
+  flex: 1;
+}
+
+.notebook-info h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #667eea;
+}
+
+/* Header Buttons */
+.btn-back {
+  background: none;
+  border: 1px solid #e0e0e0;
+  color: #666;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+}
+
+.btn-back:hover {
+  background: #f0f0f0;
+  color: #333;
+  border-color: #ccc;
+}
+
+.btn-theme-toggle {
+  background: none;
+  border: 1px solid #e0e0e0;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-theme-toggle:hover {
+  background: #f0f0f0;
+  transform: scale(1.1);
+}
+
+/* ============================================
+   3. WORKSPACE LAYOUT (3-Column)
+   ============================================ */
+.notebook-workspace {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+/* ============================================
+   4. LEFT SIDEBAR - NOTES LIST
+   ============================================ */
+.notes-sidebar {
+  width: 250px;
+  background: white;
+  border-right: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+/* Sidebar Header */
+.sidebar-header {
+  padding: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: border-color 0.3s;
+}
+
+.sidebar-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: #333;
+  transition: color 0.3s;
+}
+
+.btn-new-note {
+  background: #667eea;
+  color: white;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-new-note:hover {
+  background: #5568d3;
+  transform: scale(1.1);
+}
+
+/* Notes List */
+.notes-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.note-item {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.3s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.note-item:hover {
+  background: #f8f9fa;
+}
+
+.note-item.active {
+  background: #e8ecff;
+  border-left: 3px solid #667eea;
+}
+
+.note-item-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  color: #333;
+  font-size: 0.9rem;
+  transition: color 0.3s;
+}
+
+.note-item-header svg {
+  color: #999;
+  transition: color 0.3s;
+}
+
+.btn-delete-note-sidebar {
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  transition: all 0.2s;
+}
+
+.note-item:hover .btn-delete-note-sidebar {
+  opacity: 1;
+}
+
+.btn-delete-note-sidebar:hover {
+  background: #fee;
+  color: #f44;
+}
+
+.sidebar-empty {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: #999;
+  font-size: 0.9rem;
+}
+
+/* File badges and embeddable files */
+.file-badge {
+  font-size: 1.2rem;
+  margin: 0 0.25rem;
+}
+
+.file-item-clickable {
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.file-item-clickable:hover {
+  background: #f0f4f8 !important;
+  border-left: 3px solid #667eea;
+  padding-left: 0.7rem;
+}
+
+.file-item-embeddable:hover {
+  background: #e8f4f8 !important;
+  border-left: 3px solid #667eea;
+  transform: translateX(2px);
+}
+
+.file-item-clickable:active {
+  transform: scale(0.98);
+}
+
+.file-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-left: auto;
+}
+
+.btn-delete-file,
+.btn-insert-file {
+  opacity: 0;
+  background: transparent;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  padding: 0.25rem 0.4rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  line-height: 1;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.file-item:hover .btn-delete-file,
+.file-item:hover .btn-insert-file {
+  opacity: 1;
+}
+
+.btn-insert-file:hover {
+  background: #e8f4ff;
+  color: #667eea;
+  transform: scale(1.1);
+}
+
+.btn-delete-file:hover {
+  background: #fee;
+  color: #f44;
+  transform: scale(1.1);
+}
+
+.btn-delete-file:active,
+.btn-insert-file:active {
+  transform: scale(0.95);
+}
+
+.sidebar-hint {
+  font-size: 0.85rem;
+  color: #888;
+  margin: 0.5rem 0 0 0;
+  line-height: 1.4;
+}
+
+/* ============================================
+   5. CENTER SECTION - NOTE EDITOR
+   ============================================ */
+.note-editor {
+  flex: 1;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  transition: background 0.3s;
+}
+
+/* Editor Header Bar */
+.note-header-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 2px solid #f0f0f0;
+  padding: 1rem 2rem;
+  transition: border-color 0.3s;
+}
+
+.note-title-input {
+  flex: 1;
+  border: none;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #333;
+  outline: none;
+  transition: color 0.3s;
+  background: transparent;
+  /* Cursor color managed in cursor.css */
+}
+
+.note-title-input:focus {
+  color: #667eea;
+}
+
+.btn-toggle-mode {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 2px solid #667eea;
+  background: white;
+  color: #667eea;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+
+.btn-toggle-mode:hover {
+  background: #667eea;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.btn-toggle-mode.preview {
+  background: #667eea;
+  color: white;
+}
+
+.btn-toggle-mode.preview:hover {
+  background: #5568d3;
+}
+
+/* Editor Content Wrapper */
+.note-content-wrapper {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.note-content-editor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: none;
+  padding: 2rem;
+  font-size: 1rem;
+  line-height: 1.8;
+  color: #333;
+  resize: none;
+  outline: none;
+  font-family: inherit;
+  background: white;
+  z-index: 3;
+  transition: background 0.3s;
+  /* Cursor color managed in cursor.css */
+  /* Note: color transition removed to prevent caret color lag */
+}
+
+.note-content-editor:focus {
+  z-index: 3;
+}
+
+.note-content-editor[readonly] {
+  color: transparent;
+  z-index: 0;
+}
+
+.note-content-editor:focus + .note-content-preview {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.note-content-editor::selection {
+  background: #b3d4fc;
+  color: #000;
+}
+
+/* Preview Layer */
+.note-content-preview {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 2rem;
+  font-size: 1rem;
+  line-height: 1.8;
+  color: #333;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  z-index: 2;
+  background: white;
+  cursor: text;
+  transition: background 0.3s, color 0.3s, opacity 0.2s;
+  pointer-events: none;
+}
+
+.note-content-wrapper:hover .note-content-preview {
+  pointer-events: auto;
+}
+
+.note-content-preview .file-link {
+  pointer-events: auto;
+}
+
+.note-content-preview::selection {
+  background: #b3d4fc;
+  color: #000;
+}
+
+/* Preview/Edit Mode States */
+.note-content-wrapper.preview-mode .note-content-editor {
+  color: transparent;
+  user-select: none;
+}
+
+.note-content-wrapper.preview-mode .note-content-preview {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 2;
+}
+
+.note-content-wrapper.edit-mode .note-content-preview {
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* File Links in Preview */
+.file-link {
+  font-weight: 700;
+  color: #667eea;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 0 2px;
+}
+
+.file-link:hover {
+  background: #e8ecff;
+  color: #5568d3;
+  text-decoration: underline;
+  border-radius: 3px;
+}
+
+/* Embedded Media */
+.embedded-video,
+.embedded-image {
+  margin: 1.5rem 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 100%;
+  display: inline-block;
+  position: relative;
+}
+
+.embedded-image {
+  transition: box-shadow 0.2s, opacity 0.2s;
+  cursor: grab;
+}
+
+.embedded-image:hover {
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+}
+
+.embedded-image.resizing {
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+  cursor: grabbing;
+}
+
+.embedded-image.dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+}
+
+.resizable-image-container {
+  position: relative;
+  width: 100%;
+  user-select: none;
+}
+
+/* Drag Handle */
+.drag-handle {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: rgba(102, 126, 234, 0.9);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: grab;
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 5;
+  line-height: 1;
+  user-select: none;
+}
+
+.embedded-image:hover .drag-handle {
+  opacity: 1;
+}
+
+.embedded-image.resizing .drag-handle {
+  opacity: 0;
+}
+
+.embedded-video-player {
+  width: 100%;
+  max-height: 500px;
+  background: #000;
+  display: block;
+}
+
+.embedded-image-content {
+  width: 100%;
+  height: auto;
+  display: block;
+  pointer-events: none;
+}
+
+.embed-caption {
+  padding: 0.75rem 1rem;
+  background: #f8f9fa;
+  color: #666;
+  font-size: 0.9rem;
+  font-style: italic;
+  margin: 0;
+  border-top: 1px solid #e0e0e0;
+}
+
+/* Resize Handles */
+.resize-handle {
+  position: absolute;
+  background: #667eea;
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 10;
+}
+
+.embedded-image:hover .resize-handle {
+  opacity: 1;
+}
+
+.embedded-image.resizing .resize-handle {
+  opacity: 1;
+}
+
+/* Side handles */
+.resize-handle-left,
+.resize-handle-right {
+  width: 8px;
+  height: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: ew-resize;
+  border-radius: 4px;
+}
+
+.resize-handle-left {
+  left: -4px;
+}
+
+.resize-handle-right {
+  right: -4px;
+}
+
+/* Corner handles */
+.resize-handle-bottom-left,
+.resize-handle-bottom-right {
+  width: 16px;
+  height: 16px;
+  bottom: -8px;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.resize-handle-bottom-left {
+  left: -8px;
+  cursor: sw-resize;
+}
+
+.resize-handle-bottom-right {
+  right: -8px;
+  cursor: se-resize;
+}
+
+/* Visual feedback during resize */
+.embedded-image.resizing::after {
+  content: attr(data-width);
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #667eea;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* Saving Indicator */
+.saving-indicator {
+  position: absolute;
+  top: 1rem;
+  right: 2rem;
+  background: #667eea;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  animation: fadeIn 0.2s;
+}
+
+/* Empty Editor State */
+.empty-editor {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  gap: 1rem;
+}
+
+.empty-editor svg {
+  color: #ddd;
+}
+
+.empty-editor h2 {
+  color: #666;
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.btn-create-first {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+}
+
+.btn-create-first:hover {
+  background: #5568d3;
+  transform: translateY(-2px);
+}
+
+/* ============================================
+   6. RIGHT SIDEBAR - FILES & TOOLS
+   ============================================ */
+.files-sidebar {
+  width: 280px;
+  background: white;
+  border-left: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.sidebar-section {
+  padding: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+  transition: border-color 0.3s;
+}
+
+.sidebar-section h3 {
+  margin: 0 0 1rem 0;
+  font-size: 0.95rem;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: color 0.3s;
+}
+
+/* Text Selection Preview */
+.selected-text-preview {
+  background: linear-gradient(135deg, #e8f5e9 0%, #e8ecff 100%);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  border-left: 4px solid #4caf50;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  animation: slideIn 0.3s ease-out;
+}
+
+.selection-icon {
+  background: #4caf50;
+  color: white;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.selection-content {
+  flex: 1;
+}
+
+.selection-content small {
+  display: block;
+  font-size: 0.75rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.25rem;
+}
+
+.selection-content strong {
+  color: #333;
+  font-size: 0.95rem;
+  display: block;
+  word-break: break-word;
+}
+
+.no-selection-hint {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  border: 2px dashed #ddd;
+  text-align: center;
+}
+
+.no-selection-hint small {
+  color: #999;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.btn-create-link {
+  width: 100%;
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+}
+
+.btn-create-link:hover:not(:disabled) {
+  background: #5568d3;
+}
+
+.btn-create-link:disabled {
+  background: #e0e0e0;
+  color: #999;
+  cursor: not-allowed;
+  border: 2px dashed #ccc;
+}
+
+/* File Upload Section */
+.btn-upload-file {
+  width: 100%;
+  background: white;
+  color: #667eea;
+  border: 2px dashed #667eea;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+  margin-bottom: 1rem;
+}
+
+.btn-upload-file:hover {
+  background: #f0f2ff;
+  border-color: #5568d3;
+}
+
+.files-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.file-item {
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.file-item svg {
+  color: #667eea;
+}
+
+.file-item span {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ============================================
+   7. DARK MODE THEME
+   ============================================ */
+
+/* Page & Layout */
+.notebook-page.dark-mode {
+  background: #1a1a1a;
+}
+
+/* Header */
+.notebook-page.dark-mode .notebook-header {
+  background: #2d2d2d;
+  border-bottom-color: #667eea;
+}
+
+.notebook-page.dark-mode .notebook-info h1 {
+  color: #8b9aff !important;
+}
+
+.notebook-page.dark-mode .btn-back {
+  background: #3a3a3a;
+  color: #e0e0e0;
+  border-color: #4a4a4a;
+}
+
+.notebook-page.dark-mode .btn-back:hover {
+  background: #4a4a4a;
+  color: #fff;
+}
+
+.dark-mode .btn-theme-toggle {
+  border-color: #4a4a4a;
+}
+
+.dark-mode .btn-theme-toggle:hover {
+  background: #3a3a3a;
+}
+
+/* Left Sidebar - Notes */
+.dark-mode .notes-sidebar {
+  background: #2d2d2d;
+  border-right-color: #4a4a4a;
+}
+
+.dark-mode .sidebar-header {
+  border-bottom-color: #4a4a4a;
+}
+
+.dark-mode .sidebar-header h3 {
+  color: #e0e0e0;
+}
+
+.dark-mode .note-item {
+  border-bottom-color: #3a3a3a;
+}
+
+.dark-mode .note-item:hover {
+  background: #3a3a3a;
+}
+
+.dark-mode .note-item.active {
+  background: #2a2a4a;
+  border-left-color: #8b9aff;
+}
+
+.dark-mode .note-item-header {
+  color: #e0e0e0;
+}
+
+.dark-mode .note-item-header svg {
+  color: #aaa;
+}
+
+/* Center - Editor */
+.dark-mode .note-editor {
+  background: #252525;
+}
+
+.dark-mode .note-header-bar {
+  border-bottom-color: #3a3a3a;
+}
+
+.dark-mode .note-title-input {
+  color: #e0e0e0;
+  /* Cursor color managed in cursor.css */
+}
+
+.dark-mode .note-title-input:focus {
+  color: #8b9aff;
+}
+
+.dark-mode .btn-toggle-mode {
+  border-color: #8b9aff;
+  color: #8b9aff;
+  background: #2d2d2d;
+}
+
+.dark-mode .btn-toggle-mode:hover {
+  background: #8b9aff;
+  color: white;
+}
+
+.dark-mode .btn-toggle-mode.preview {
+  background: #8b9aff;
+  color: white;
+}
+
+.dark-mode .note-content-editor {
+  color: #e0e0e0;
+  background: #252525;
+  /* Cursor color managed in cursor.css */
+}
+
+.dark-mode .note-content-preview {
+  color: #e0e0e0;
+  background: #252525;
+}
+
+.dark-mode .file-link {
+  color: #8b9aff;
+}
+
+.dark-mode .file-link:hover {
+  background: #2a2a4a;
+  color: #a0afff;
+}
+
+/* Right Sidebar - Files */
+.dark-mode .files-sidebar {
+  background: #2d2d2d;
+  border-left-color: #4a4a4a;
+}
+
+.dark-mode .sidebar-section {
+  border-bottom-color: #3a3a3a;
+}
+
+.dark-mode .sidebar-section h3 {
+  color: #e0e0e0;
+}
+
+/* ============================================
+   8. ANIMATIONS & KEYFRAMES
+   ============================================ */
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(-10px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   8. FILE SELECTOR MODAL
+   ============================================ */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 500px;
+  animation: slideIn 0.3s ease-out;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #333;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #999;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.modal-close:hover {
+  background: #fee;
+  color: #f44;
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.selected-text-display {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid #667eea;
+}
+
+.selected-text-display strong {
+  color: #333;
+  word-break: break-word;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+.file-select,
+.page-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  color: #333;
+  background: white;
+  transition: all 0.2s;
+}
+
+.file-select:focus,
+.page-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.info-message {
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 0.75rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  border-left: 4px solid #4caf50;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.btn-cancel,
+.btn-submit {
+  flex: 1;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-cancel {
+  background: #e0e0e0;
+  color: #666;
+}
+
+.btn-cancel:hover {
+  background: #d0d0d0;
+}
+
+.btn-submit {
+  background: #667eea;
+  color: white;
+}
+
+.btn-submit:hover {
+  background: #5568d3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+/* Dark Mode for Modal */
+.dark-mode .modal-content {
+  background: #2d2d2d;
+}
+
+.dark-mode .modal-header {
+  border-bottom-color: #4a4a4a;
+}
+
+.dark-mode .modal-header h3 {
+  color: #e0e0e0;
+}
+
+.dark-mode .selected-text-display {
+  background: #3a3a3a;
+  border-left-color: #8b9aff;
+}
+
+.dark-mode .selected-text-display strong {
+  color: #e0e0e0;
+}
+
+.dark-mode .form-group label {
+  color: #ccc;
+}
+
+.dark-mode .file-select,
+.dark-mode .page-input {
+  background: #3a3a3a;
+  border-color: #4a4a4a;
+  color: #e0e0e0;
+}
+
+.dark-mode .file-select:focus,
+.dark-mode .page-input:focus {
+  border-color: #8b9aff;
+  box-shadow: 0 0 0 3px rgba(139, 154, 255, 0.1);
+}
+
+.dark-mode .btn-cancel {
+  background: #3a3a3a;
+  color: #ccc;
+}
+
+.dark-mode .btn-cancel:hover {
+  background: #4a4a4a;
+}
+
+/* Delete Confirmation Modal */
+.delete-confirm-modal {
+  max-width: 450px;
+}
+
+.delete-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: #fff3cd;
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid #ffc107;
+  margin-bottom: 1.5rem;
+}
+
+.warning-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.warning-text {
+  margin: 0;
+  font-size: 1rem;
+  color: #856404;
+  font-weight: 600;
+}
+
+.delete-note-info {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  border-left: 4px solid #667eea;
+}
+
+.delete-note-info strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.files-warning {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e0e0e0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.warning-badge {
+  display: inline-block;
+  background: #dc3545;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-right: 0.5rem;
+}
+
+.delete-disclaimer {
+  text-align: center;
+  color: #999;
+  font-size: 0.85rem;
+  font-style: italic;
+  margin: 0 0 1.5rem 0;
+}
+
+.btn-delete-confirm {
+  flex: 1;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #dc3545;
+  color: white;
+}
+
+.btn-delete-confirm:hover {
+  background: #c82333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+.btn-delete-confirm:active {
+  transform: translateY(0);
+}
+
+/* Dark Mode for Delete Modal */
+.dark-mode .delete-warning {
+  background: #3a3a2a;
+  border-left-color: #ffc107;
+}
+
+.dark-mode .warning-text {
+  color: #ffd666;
+}
+
+.dark-mode .delete-note-info {
+  background: #3a3a3a;
+  border-left-color: #8b9aff;
+}
+
+.dark-mode .delete-note-info strong {
+  color: #e0e0e0;
+}
+
+.dark-mode .files-warning {
+  border-top-color: #4a4a4a;
+  color: #aaa;
+}
+
+.dark-mode .delete-disclaimer {
+  color: #888;
+}
+
+/* File Info Display (for file deletion modal) */
+.file-info-display {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 2px solid #e0e0e0;
+}
+
+.file-info-display .file-icon {
+  font-size: 2rem;
+}
+
+.file-info-display strong {
+  font-size: 1rem;
+  color: #333;
+  word-break: break-all;
+}
+
+.dark-mode .file-info-display {
+  background: #3a3a3a;
+  border-color: #4a4a4a;
+}
+
+.dark-mode .file-info-display strong {
+  color: #ddd;
+}
+
+/* Dark Mode - Embedded Media */
+.dark-mode .embedded-video,
+.dark-mode .embedded-image {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.dark-mode .embedded-image:hover {
+  box-shadow: 0 4px 16px rgba(139, 154, 255, 0.4);
+}
+
+.dark-mode .embedded-image.resizing {
+  box-shadow: 0 6px 20px rgba(139, 154, 255, 0.6);
+}
+
+.dark-mode .drag-handle {
+  background: rgba(139, 154, 255, 0.9);
+}
+
+.dark-mode .resize-handle {
+  background: #8b9aff;
+}
+
+.dark-mode .embed-caption {
+  background: #3a3a3a;
+  color: #aaa;
+  border-top-color: #4a4a4a;
+}
+
+.dark-mode .file-item-clickable:hover {
+  background: #3a3a4a !important;
+  border-left-color: #8b9aff;
+}
+
+.dark-mode .file-item-embeddable:hover {
+  background: #3a4a5a !important;
+  border-left-color: #8b9aff;
+}
+
+.dark-mode .btn-delete-file,
+.dark-mode .btn-insert-file {
+  color: #888;
+}
+
+.dark-mode .btn-insert-file:hover {
+  background: #2a3a4a;
+  color: #8b9aff;
+}
+
+.dark-mode .btn-delete-file:hover {
+  background: #4a2a2a;
+  color: #f88;
+}
+
+.dark-mode .sidebar-hint {
+  color: #888;
+}
+
+/* ============================================
+   9. RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 1024px) {
+  .files-sidebar {
+    display: none;
+  }
+  
+  .notes-sidebar {
+    width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .notebook-workspace {
+    flex-direction: column;
+  }
+  
+  .notes-sidebar {
+    width: 100%;
+    height: 150px;
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .notes-list {
+    display: flex;
+    overflow-x: auto;
+  }
+  
+  .note-item {
+    min-width: 150px;
+    border-right: 1px solid #f0f0f0;
+    border-bottom: none;
+  }
+}

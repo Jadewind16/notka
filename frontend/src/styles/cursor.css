@@ -1,0 +1,56 @@
+/* ============================================
+   CURSOR STYLES - Centralized Cursor Management
+   ============================================ */
+
+/* ============================================
+   LIGHT MODE CURSORS (Default)
+   ============================================ */
+
+/* Title Input Cursor - Light Mode */
+.note-title-input,
+input.note-title-input,
+.light-mode .note-title-input,
+.notebook-page .note-title-input {
+  caret-color: #000 !important;
+}
+
+/* Editor Content Cursor - Light Mode */
+.note-content-editor,
+textarea.note-content-editor,
+.light-mode .note-content-editor,
+.notebook-page .note-content-editor {
+  caret-color: #000 !important;
+}
+
+/* ============================================
+   DARK MODE CURSORS
+   ============================================ */
+
+/* Title Input Cursor - Dark Mode */
+.dark-mode .note-title-input,
+.notebook-page.dark-mode .note-title-input,
+.dark-mode input.note-title-input {
+  caret-color: #fff !important;
+}
+
+/* Editor Content Cursor - Dark Mode */
+.dark-mode .note-content-editor,
+.notebook-page.dark-mode .note-content-editor,
+.dark-mode textarea.note-content-editor {
+  caret-color: #fff !important;
+}
+
+/* ============================================
+   NOTES:
+   - Cursor color automatically changes with theme
+   - No special states needed (preview, disabled, etc.)
+   - Cursor remains visible in all modes
+   ============================================ */
+
+
+
+
+
+
+
+
