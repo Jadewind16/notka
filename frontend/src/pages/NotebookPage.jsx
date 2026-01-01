@@ -349,42 +349,20 @@ function NotebookPage() {
 
   const handleFileSelection = (fileIndex, pageNumber) => {
     const selectedFile = noteFiles[fileIndex];
-
-    // Determine if file is an image or video (no page numbers needed)
-    const imageExtensions = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'svg', 'webp'];
-    const videoExtensions = ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv', 'm4v'];
-    const fileExt = selectedFile.path.split('.').pop().toLowerCase();
-    const isImage = imageExtensions.includes(fileExt);
-    const isVideo = videoExtensions.includes(fileExt);
-    const noPageNumber = isImage || isVideo;
-
-    console.log('Creating link:', { 
-      selectedFile, 
-      fileExt, 
-      isImage,
-      isVideo,
-      noPageNumber,
-      pageNumber,
-      selectedText 
-    });
-
-    // Create markdown link with metadata
-    // For images and videos, don't add page number
-    // Use angle brackets to handle special characters in filenames
-    const linkMarkdown = noPageNumber
-      ? `[${selectedText}](<file://${selectedFile.path}>)`
-      : `[${selectedText}](<file://${selectedFile.path}#page=${pageNumber}>)`;
-
-    console.log('Generated markdown:', linkMarkdown);
-
-    // Replace selected text with link
-    const newContent = noteContent.replace(selectedText, linkMarkdown);
-    setNoteContent(newContent);
-    setSelectedText('');
+    
+    // Close file selector and open FileViewer for navigation
     setShowFileSelector(false);
-
-    // Auto-save with debounce
-    debouncedSave();
+    
+    // Open FileViewer with the selected file
+    setViewerFile({
+      ...currentNote,
+      file_path: selectedFile.path,
+      page_number: pageNumber || 1,
+      timestamp: null
+    });
+    setShowFileViewer(true);
+    
+    // User will navigate in FileViewer and create link from there
   };
 
   const handleLinkClick = useCallback((filePath, page, timestamp) => {
@@ -1011,7 +989,6 @@ function NotebookPage() {
 // File Selector Modal Component
 function FileSelectorModal({ files, selectedText, onSelect, onCancel }) {
   const [selectedFileIndex, setSelectedFileIndex] = useState(0);
-  const [pageNumber, setPageNumber] = useState('');
 
   // Safety check
   if (!files || files.length === 0) {
@@ -1026,22 +1003,13 @@ function FileSelectorModal({ files, selectedText, onSelect, onCancel }) {
   const isImageFile = (path) => {
     const imageExtensions = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'svg', 'webp'];
     const ext = getFileExtension(path);
-    const isImage = imageExtensions.includes(ext);
-    console.log('isImageFile check:', { path, ext, isImage });
-    return isImage;
+    return imageExtensions.includes(ext);
   };
 
   const isVideoFile = (path) => {
     const videoExtensions = ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv', 'm4v'];
     const ext = getFileExtension(path);
-    const isVideo = videoExtensions.includes(ext);
-    console.log('isVideoFile check:', { path, ext, isVideo });
-    return isVideo;
-  };
-
-  const needsPageNumber = (path) => {
-    // Images and videos don't need page numbers
-    return !isImageFile(path) && !isVideoFile(path);
+    return videoExtensions.includes(ext);
   };
 
   const handleSubmit = (e) => {
@@ -1049,31 +1017,17 @@ function FileSelectorModal({ files, selectedText, onSelect, onCancel }) {
     const selectedFile = files[selectedFileIndex];
     if (!selectedFile) return;
 
-    const requiresPageNumber = needsPageNumber(selectedFile.path);
-
-    // For images and videos, don't require page number
-    if (!requiresPageNumber) {
-      onSelect(selectedFileIndex, null);
-      return;
-    }
-
-    // Validate page number for files that need it (PDFs, docs, etc.)
-    if (!pageNumber) {
-      alert('Please enter a page/slide number');
-      return;
-    }
-
-    onSelect(selectedFileIndex, pageNumber);
+    // Open FileViewer for navigation - user will select page/timestamp there
+    onSelect(selectedFileIndex, null);
   };
 
   const currentFile = files[selectedFileIndex];
-  const currentFileNeedsPageNumber = currentFile ? needsPageNumber(currentFile.path) : true;
 
   return (
     <div className="modal-overlay" onClick={onCancel}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h3>Create Link to File</h3>
+          <h3>📌 Create Link to File</h3>
           <button className="modal-close" onClick={onCancel}>✕</button>
         </div>
 
@@ -1098,33 +1052,16 @@ function FileSelectorModal({ files, selectedText, onSelect, onCancel }) {
               </select>
             </div>
 
-            {currentFileNeedsPageNumber && (
-              <div className="form-group">
-                <label>Page/Slide Number:</label>
-                <input
-                  type="number"
-                  value={pageNumber}
-                  onChange={(e) => setPageNumber(e.target.value)}
-                  min="1"
-                  placeholder="Enter page number"
-                  className="page-input"
-                  required
-                />
-              </div>
-            )}
-
-            {!currentFileNeedsPageNumber && (
-              <div className="info-message">
-                💡 {isVideoFile(currentFile?.path) ? 'Videos' : 'Images'} don't require a page number
-              </div>
-            )}
+            <div className="info-message" style={{ marginTop: '1rem', padding: '0.75rem', background: '#f0f7ff', borderLeft: '3px solid #667eea', borderRadius: '4px' }}>
+              💡 <strong>Next:</strong> Preview the file and navigate to the specific page/timestamp, then create your link!
+            </div>
 
             <div className="modal-actions">
               <button type="button" className="btn-cancel" onClick={onCancel}>
                 Cancel
               </button>
               <button type="submit" className="btn-submit">
-                Create Link
+                📂 Open & Navigate
               </button>
             </div>
           </form>

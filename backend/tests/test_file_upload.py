@@ -5,13 +5,71 @@ import os
 from pathlib import Path
 
 
+# Minimal valid PDF content that can be opened by PDF readers
+MINIMAL_PDF = b"""%PDF-1.4
+1 0 obj
+<<
+/Type /Catalog
+/Pages 2 0 R
+>>
+endobj
+2 0 obj
+<<
+/Type /Pages
+/Kids [3 0 R]
+/Count 1
+>>
+endobj
+3 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612 792]
+/Contents 4 0 R
+/Resources <<
+/Font <<
+/F1 <<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+>>
+>>
+>>
+>>
+endobj
+4 0 obj
+<<
+/Length 44
+>>
+stream
+BT
+/F1 12 Tf
+100 700 Td
+(Test PDF) Tj
+ET
+endstream
+endobj
+xref
+0 5
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000317 00000 n 
+trailer
+<<
+/Size 5
+/Root 1 0 R
+>>
+startxref
+410
+%%EOF
+"""
+
+
 @pytest.mark.asyncio
 async def test_upload_pdf_with_note(async_client):
     """Test uploading a PDF file with a note."""
-    # Create a simple PDF-like content (for testing)
-    # In a real PDF, this would be actual PDF binary data
-    pdf_content = b"%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj 2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj 3 0 obj<</Type/Page/MediaBox[0 0 612 792]/Parent 2 0 R/Resources<<>>>>endobj\nxref\n0 4\n0000000000 65535 f\n0000000009 00000 n\n0000000052 00000 n\n0000000101 00000 n\ntrailer<</Size 4/Root 1 0 R>>\nstartxref\n149\n%%EOF"
-    
     # Prepare form data with file
     note_data = {
         "title": "Test PDF Note",
@@ -20,7 +78,7 @@ async def test_upload_pdf_with_note(async_client):
     }
     
     files = {
-        "file": ("test_document.pdf", io.BytesIO(pdf_content), "application/pdf")
+        "file": ("test_document.pdf", io.BytesIO(MINIMAL_PDF), "application/pdf")
     }
     
     # Upload note with PDF
@@ -52,8 +110,6 @@ async def test_upload_pdf_with_note(async_client):
 async def test_retrieve_uploaded_pdf(async_client):
     """Test retrieving an uploaded PDF file."""
     # First upload a PDF
-    pdf_content = b"%PDF-1.4\n%Test PDF content\n%%EOF"
-    
     note_data = {
         "title": "Retrieve Test PDF",
         "content": "Testing file retrieval",
@@ -61,7 +117,7 @@ async def test_retrieve_uploaded_pdf(async_client):
     }
     
     files = {
-        "file": ("retrieve_test.pdf", io.BytesIO(pdf_content), "application/pdf")
+        "file": ("retrieve_test.pdf", io.BytesIO(MINIMAL_PDF), "application/pdf")
     }
     
     # Upload
@@ -90,15 +146,13 @@ async def test_retrieve_uploaded_pdf(async_client):
 async def test_download_pdf_file(async_client):
     """Test downloading the uploaded PDF file."""
     # Upload a PDF first
-    pdf_content = b"%PDF-1.4\nTest content for download\n%%EOF"
-    
     note_data = {
         "title": "Download Test PDF",
         "content": "Testing file download",
     }
     
     files = {
-        "file": ("download_test.pdf", io.BytesIO(pdf_content), "application/pdf")
+        "file": ("download_test.pdf", io.BytesIO(MINIMAL_PDF), "application/pdf")
     }
     
     # Upload
@@ -141,7 +195,7 @@ async def test_upload_multiple_file_types(async_client):
     test_files = [
         {
             "filename": "test.pdf",
-            "content": b"%PDF-1.4\nTest PDF\n%%EOF",
+            "content": MINIMAL_PDF,
             "content_type": "application/pdf",
             "title": "PDF Test",
         },
@@ -195,8 +249,6 @@ async def test_upload_multiple_file_types(async_client):
 @pytest.mark.asyncio
 async def test_pdf_page_number_reference(async_client):
     """Test that page numbers are properly stored and retrieved for PDFs."""
-    pdf_content = b"%PDF-1.4\nMulti-page PDF test\n%%EOF"
-    
     # Upload PDF with page number
     note_data = {
         "title": "Chapter 5 Notes",
@@ -205,7 +257,7 @@ async def test_pdf_page_number_reference(async_client):
     }
     
     files = {
-        "file": ("textbook.pdf", io.BytesIO(pdf_content), "application/pdf")
+        "file": ("textbook.pdf", io.BytesIO(MINIMAL_PDF), "application/pdf")
     }
     
     response = await async_client.post("/api/notes/", data=note_data, files=files)
@@ -254,16 +306,14 @@ async def test_file_size_limit(async_client):
     # For testing, we'll mock this by checking if the limit is enforced
     # In reality, creating 100MB+ file in test is impractical
     
-    # Create a 1MB file (well within limit)
-    small_pdf = b"%PDF-1.4\n" + b"x" * (1 * 1024 * 1024) + b"\n%%EOF"
-    
+    # Use a minimal valid PDF (well within limit)
     note_data = {
         "title": "Size Test",
         "content": "Testing file size",
     }
     
     files = {
-        "file": ("large.pdf", io.BytesIO(small_pdf), "application/pdf")
+        "file": ("large.pdf", io.BytesIO(MINIMAL_PDF), "application/pdf")
     }
     
     response = await async_client.post("/api/notes/", data=note_data, files=files)
@@ -278,15 +328,13 @@ async def test_file_size_limit(async_client):
 async def test_delete_note_removes_file(async_client):
     """Test that deleting a note also removes the associated file."""
     # Upload a note with file
-    pdf_content = b"%PDF-1.4\nDelete test\n%%EOF"
-    
     note_data = {
         "title": "File Delete Test",
         "content": "This file should be deleted",
     }
     
     files = {
-        "file": ("delete_me.pdf", io.BytesIO(pdf_content), "application/pdf")
+        "file": ("delete_me.pdf", io.BytesIO(MINIMAL_PDF), "application/pdf")
     }
     
     response = await async_client.post("/api/notes/", data=note_data, files=files)

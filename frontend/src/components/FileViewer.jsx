@@ -1,16 +1,19 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import { noteAPI } from '../services/api';
 import LinkTextModal from './LinkTextModal';
 import './FileViewer.css';
 
 function FileViewer({ note, onClose, onInsertLink, selectedText }) {
   const videoRef = useRef(null);
+  const modalRef = useRef(null);
   const [pdfPage, setPdfPage] = useState(note.page_number || 1);
+  const [totalPages, setTotalPages] = useState(null);
   const [showLinkModal, setShowLinkModal] = useState(false);
   const [linkModalData, setLinkModalData] = useState(null);
   const [imageError, setImageError] = useState(false);
   const [videoError, setVideoError] = useState(false);
   const [iframeError, setIframeError] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   const getFileExtension = (filePath) => {
     if (!filePath) return null;
@@ -39,13 +42,15 @@ function FileViewer({ note, onClose, onInsertLink, selectedText }) {
     if (!videoRef.current || !onInsertLink) return;
 
     const currentTime = Math.floor(videoRef.current.currentTime);
+    const duration = Math.floor(videoRef.current.duration);
     const timeFormatted = formatTime(currentTime);
 
     setLinkModalData({
       mediaType: 'video',
       mediaInfo: {
         seconds: currentTime,
-        formatted: timeFormatted
+        formatted: timeFormatted,
+        duration: duration
       },
       filePath: note.file_path
     });
@@ -58,7 +63,8 @@ function FileViewer({ note, onClose, onInsertLink, selectedText }) {
     setLinkModalData({
       mediaType: 'pdf',
       mediaInfo: {
-        page: pdfPage
+        page: pdfPage,
+        totalPages: totalPages
       },
       filePath: note.file_path
     });
@@ -87,6 +93,48 @@ function FileViewer({ note, onClose, onInsertLink, selectedText }) {
     setShowLinkModal(false);
     setLinkModalData(null);
   };
+
+  // Fullscreen handlers
+  const toggleFullscreen = useCallback(async () => {
+    if (!modalRef.current) return;
+
+    try {
+      if (!document.fullscreenElement) {
+        // Enter fullscreen
+        await modalRef.current.requestFullscreen();
+        setIsFullscreen(true);
+      } else {
+        // Exit fullscreen
+        await document.exitFullscreen();
+        setIsFullscreen(false);
+      }
+    } catch (error) {
+      console.error('Error toggling fullscreen:', error);
+    }
+  }, []);
+
+  // Listen for fullscreen changes (e.g., user presses ESC)
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+
+    const handleKeyPress = (e) => {
+      // Toggle fullscreen with 'F' key (only if not typing in input)
+      if ((e.key === 'f' || e.key === 'F') && !e.target.matches('input, textarea')) {
+        e.preventDefault();
+        toggleFullscreen();
+      }
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('keydown', handleKeyPress);
+    
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [toggleFullscreen]);
 
   const renderViewer = () => {
     // Check if file path exists
@@ -335,7 +383,11 @@ function FileViewer({ note, onClose, onInsertLink, selectedText }) {
   return (
     <>
       <div className="file-viewer-overlay" onClick={onClose}>
-        <div className="file-viewer-modal" onClick={(e) => e.stopPropagation()}>
+        <div 
+          ref={modalRef}
+          className={`file-viewer-modal ${isFullscreen ? 'fullscreen' : ''}`}
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="file-viewer-header">
             <div>
               <h2>📂 {note.title}</h2>
@@ -343,9 +395,18 @@ function FileViewer({ note, onClose, onInsertLink, selectedText }) {
                 <span className="page-indicator">Page {note.page_number}</span>
               )}
             </div>
-            <button className="btn-close" onClick={onClose}>
-              ✕
-            </button>
+            <div className="header-buttons">
+              <button 
+                className="btn-fullscreen" 
+                onClick={toggleFullscreen}
+                title={isFullscreen ? "Exit fullscreen (ESC)" : "Enter fullscreen (F)"}
+              >
+                {isFullscreen ? '⤓' : '⤢'}
+              </button>
+              <button className="btn-close" onClick={onClose}>
+                ✕
+              </button>
+            </div>
           </div>
 
           <div className="file-viewer-content">{renderViewer()}</div>

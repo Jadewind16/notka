@@ -23,8 +23,11 @@ github: FORCE
 all_tests: FORCE
 	@echo "🧪 Running all tests..."
 	cd $(BACKEND_DIR); make tests
-	cd $(NOTES_DIR); make tests
 	@echo "✅ All tests passed!"
+	@echo ""
+	@echo "🧹 Cleaning up test data..."
+	@./clean_test_data.sh
+	@echo "✅ Test cleanup complete!"
 
 dev_env: FORCE
 	@echo "Setting up development environment..."

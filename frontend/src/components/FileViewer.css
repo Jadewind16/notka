@@ -21,6 +21,42 @@
   display: flex;
   flex-direction: column;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+/* Fullscreen mode */
+.file-viewer-modal.fullscreen {
+  max-width: 100%;
+  width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.file-viewer-modal:fullscreen {
+  max-width: 100%;
+  width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* For browsers that use -webkit- prefix */
+.file-viewer-modal:-webkit-full-screen {
+  max-width: 100%;
+  width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* For browsers that use -moz- prefix */
+.file-viewer-modal:-moz-full-screen {
+  max-width: 100%;
+  width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .file-viewer-header {
@@ -47,10 +83,17 @@
   margin-top: 0.5rem;
 }
 
+.header-buttons {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.btn-fullscreen,
 .btn-close {
   background: none;
   border: none;
-  font-size: 2rem;
+  font-size: 1.8rem;
   cursor: pointer;
   color: #999;
   line-height: 1;
@@ -61,12 +104,23 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  transition: background-color 0.2s;
+  transition: all 0.2s;
 }
 
+.btn-close {
+  font-size: 2rem;
+}
+
+.btn-fullscreen:hover,
 .btn-close:hover {
   background-color: #f0f0f0;
   color: #333;
+  transform: scale(1.05);
+}
+
+.btn-fullscreen:active,
+.btn-close:active {
+  transform: scale(0.95);
 }
 
 .file-viewer-content {
