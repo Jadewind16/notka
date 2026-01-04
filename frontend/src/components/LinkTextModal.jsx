@@ -15,7 +15,13 @@ function LinkTextModal({ mediaType, mediaInfo, filePath, selectedText, onConfirm
       if (mediaType === 'video') {
         setLinkText(`Timestamp ${mediaInfo.formatted}`);
       } else if (mediaType === 'pdf') {
-        setLinkText(`Page ${selectedPage}`);
+        if (mediaInfo.anchorText) {
+          // Use anchor text as default (truncated)
+          const truncated = mediaInfo.anchorText.substring(0, 50);
+          setLinkText(truncated + (mediaInfo.anchorText.length > 50 ? '...' : ''));
+        } else {
+          setLinkText(`Page ${selectedPage}`);
+        }
       } else if (mediaType === 'image') {
         setLinkText('Image');
       }
@@ -26,6 +32,11 @@ function LinkTextModal({ mediaType, mediaInfo, filePath, selectedText, onConfirm
     if (mediaType === 'video') {
       return `[${linkText}](<file://${filePath}#t=${selectedTimestamp}>)`;
     } else if (mediaType === 'pdf') {
+      // Include anchor text if available
+      if (mediaInfo.anchorText) {
+        const encodedAnchor = encodeURIComponent(mediaInfo.anchorText);
+        return `[${linkText}](<file://${filePath}#page=${selectedPage}&anchor=${encodedAnchor}>)`;
+      }
       return `[${linkText}](<file://${filePath}#page=${selectedPage}>)`;
     } else if (mediaType === 'image') {
       return `[${linkText}](<file://${filePath}>)`;
@@ -95,6 +106,19 @@ function LinkTextModal({ mediaType, mediaInfo, filePath, selectedText, onConfirm
                   📄 Current page: <strong>{mediaInfo.page}</strong>
                   {mediaInfo.totalPages && <span> of {mediaInfo.totalPages}</span>}
                 </p>
+                {mediaInfo.anchorText && (
+                  <div className="anchor-text-info">
+                    <p className="anchor-text-label">
+                      📝 Text anchor selected:
+                    </p>
+                    <p className="anchor-text-preview">
+                      "{mediaInfo.anchorText.substring(0, 100)}{mediaInfo.anchorText.length > 100 ? '...' : ''}"
+                    </p>
+                    <p className="anchor-text-hint">
+                      💡 Clicking this link will jump to this specific text on the page
+                    </p>
+                  </div>
+                )}
                 <div className="page-controls">
                   <label htmlFor="page-input">Link to page:</label>
                   <div className="page-input-group">

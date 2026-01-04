@@ -365,7 +365,7 @@ function NotebookPage() {
     // User will navigate in FileViewer and create link from there
   };
 
-  const handleLinkClick = useCallback((filePath, page, timestamp) => {
+  const handleLinkClick = useCallback((filePath, page, timestamp, anchorText = null) => {
     // Normalize both the clicked path and stored paths for comparison
     const normalizePath = (path) => {
       if (!path) return path;
@@ -381,7 +381,8 @@ function NotebookPage() {
         title: file.name || extractFileName(file.path),
         file_path: file.path,  // Use the original path from noteFiles
         page_number: page || 1,
-        timestamp: timestamp || null
+        timestamp: timestamp || null,
+        anchor_text: anchorText || null  // Include text anchor for paragraph-level linking
       });
       setViewerPage(page || 1);
       setShowFileViewer(true);
@@ -451,11 +452,12 @@ function NotebookPage() {
         );
       }
 
-      // Extract file path, page number, timestamp, and width if present
-      // Supports: #page=5, #t=90, ?width=600
-      const paramsMatch = filePathWithParams.match(/^([^#?]+)(?:#(?:page=(\d+)|t=(\d+)))?(?:\?width=(\d+))?$/);
+      // Extract file path, page number, timestamp, anchor, and width if present
+      // Supports: #page=5, #page=5&anchor=text, #t=90, ?width=600
+      const paramsMatch = filePathWithParams.match(/^([^#?]+)(?:#(?:page=(\d+)(?:&anchor=([^&?]+))?|t=(\d+)))?(?:\?width=(\d+))?$/);
       if (paramsMatch) {
-        const [, filePath, page, timestamp, width] = paramsMatch;
+        const [, filePath, page, encodedAnchor, timestamp, width] = paramsMatch;
+        const anchorText = encodedAnchor ? decodeURIComponent(encodedAnchor) : null;
         const fileExt = filePath.split('.').pop().toLowerCase();
         const videoExts = ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv', 'm4v'];
         const imageExts = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'svg', 'webp'];
@@ -500,17 +502,18 @@ function NotebookPage() {
           }
         } else {
           // Render as clickable link
-          console.log('Rendering link:', { text, filePath, page, timestamp });
+          console.log('Rendering link:', { text, filePath, page, timestamp, anchorText });
           parts.push(
             <span
               key={`link-${key++}`}
               className="file-link"
               onClick={() => {
-                console.log('Link clicked:', { filePath, page, timestamp });
+                console.log('Link clicked:', { filePath, page, timestamp, anchorText });
                 handleLinkClick(
                   filePath,
                   page ? parseInt(page) : null,
-                  timestamp ? parseInt(timestamp) : null
+                  timestamp ? parseInt(timestamp) : null,
+                  anchorText
                 );
               }}
             >

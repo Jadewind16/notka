@@ -1,0 +1,236 @@
+/* PDF Viewer Container */
+.pdf-viewer-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: #f5f5f5;
+}
+
+.pdf-viewer-container.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10000;
+  background: #525659;
+}
+
+/* PDF Viewer Wrapper */
+.pdf-viewer-wrapper {
+  flex: 1;
+  overflow: hidden;
+  background: #525659;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Make default layout fill space */
+.pdf-viewer-wrapper .rpv-default-layout__container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.pdf-viewer-wrapper .rpv-default-layout__body {
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Custom Controls Overlay */
+.pdf-controls-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  background: rgba(248, 249, 250, 0.95);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(224, 224, 224, 0.5);
+  z-index: 100;
+}
+
+.pdf-controls-overlay.fullscreen {
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.pdf-controls-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Page Info Display */
+.pdf-page-info {
+  padding: 0.5rem 0.75rem;
+  background: white;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #333;
+  border: 2px solid #e0e0e0;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pdf-page-info .page-label {
+  color: #666;
+  font-weight: 400;
+}
+
+.pdf-controls-overlay.fullscreen .pdf-page-info {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.pdf-controls-overlay.fullscreen .pdf-page-info .page-label {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.pdf-page-info strong {
+  font-weight: 700;
+  color: #667eea;
+}
+
+.pdf-controls-overlay.fullscreen .pdf-page-info strong {
+  color: #a0b0ff;
+}
+
+.selected-text-indicator {
+  font-size: 1.2rem;
+  cursor: help;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* Create Link Button */
+.btn-create-link {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+}
+
+.btn-create-link:hover {
+  background: #5568d3;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.4);
+}
+
+.btn-create-link:active {
+  transform: translateY(0);
+}
+
+.pdf-controls-overlay.fullscreen .btn-create-link {
+  background: rgba(102, 126, 234, 0.9);
+}
+
+.pdf-controls-overlay.fullscreen .btn-create-link:hover {
+  background: rgba(102, 126, 234, 1);
+}
+
+/* Override @react-pdf-viewer default styles */
+.rpv-core__viewer {
+  background: #525659;
+}
+
+.rpv-core__inner-page {
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  margin: 1rem auto;
+}
+
+.rpv-core__text-layer {
+  opacity: 0.2;
+}
+
+/* Toolbar customization */
+.rpv-default-layout__toolbar {
+  background: #f8f9fa;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 0.5rem;
+}
+
+.rpv-default-layout__sidebar {
+  background: #f8f9fa;
+  border-right: 1px solid #e0e0e0;
+}
+
+.rpv-default-layout__main {
+  background: #525659;
+}
+
+/* Fullscreen toolbar styling */
+.pdf-viewer-container.fullscreen .rpv-default-layout__toolbar {
+  background: rgba(0, 0, 0, 0.8);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Button hover effects */
+.rpv-core__button:hover {
+  background-color: rgba(102, 126, 234, 0.1);
+}
+
+/* Zoom buttons styling */
+.rpv-zoom__popover-target-scale {
+  min-width: 80px;
+}
+
+/* Scrollbar styling */
+.pdf-viewer-wrapper::-webkit-scrollbar {
+  width: 12px;
+}
+
+.pdf-viewer-wrapper::-webkit-scrollbar-track {
+  background: #3e4245;
+}
+
+.pdf-viewer-wrapper::-webkit-scrollbar-thumb {
+  background: #666;
+  border-radius: 6px;
+}
+
+.pdf-viewer-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .pdf-controls-overlay {
+    flex-wrap: wrap;
+    padding: 0.5rem;
+  }
+
+  .pdf-controls-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .btn-create-link {
+    width: 100%;
+  }
+}

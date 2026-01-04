@@ -258,6 +258,43 @@
   box-shadow: none;
 }
 
+/* Anchor text info styles */
+.anchor-text-info {
+  background: #f0f7ff;
+  border: 2px solid #667eea;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.anchor-text-label {
+  font-weight: 600;
+  color: #667eea;
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9rem;
+}
+
+.anchor-text-preview {
+  background: white;
+  padding: 0.75rem;
+  border-radius: 6px;
+  font-style: italic;
+  color: #333;
+  margin: 0.5rem 0;
+  border-left: 4px solid #667eea;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.anchor-text-hint {
+  color: #666;
+  font-size: 0.85rem;
+  margin: 0.5rem 0 0 0;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
 @media (max-width: 768px) {
   .link-modal {
     max-width: 100%;

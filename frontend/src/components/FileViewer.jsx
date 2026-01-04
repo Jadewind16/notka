@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
 import { noteAPI } from '../services/api';
 import LinkTextModal from './LinkTextModal';
+import PdfViewer from './PdfViewer';
 import './FileViewer.css';
 
 function FileViewer({ note, onClose, onInsertLink, selectedText }) {
@@ -12,7 +13,6 @@ function FileViewer({ note, onClose, onInsertLink, selectedText }) {
   const [linkModalData, setLinkModalData] = useState(null);
   const [imageError, setImageError] = useState(false);
   const [videoError, setVideoError] = useState(false);
-  const [iframeError, setIframeError] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   const getFileExtension = (filePath) => {
@@ -24,6 +24,7 @@ function FileViewer({ note, onClose, onInsertLink, selectedText }) {
   const fileUrl = noteAPI.getFileUrl(note.file_path);
   const pageNumber = note.page_number || 1;
   const initialTimestamp = note.timestamp || null;
+  const anchorText = note.anchor_text || null; // Text anchor for paragraph-level linking
 
   // Format seconds to HH:MM:SS or MM:SS
   const formatTime = (seconds) => {
@@ -57,18 +58,28 @@ function FileViewer({ note, onClose, onInsertLink, selectedText }) {
     setShowLinkModal(true);
   };
 
-  const handleInsertPDFLink = () => {
+  const handleInsertPDFLink = (page, total, anchorText = null) => {
     if (!onInsertLink) return;
+
+    // Update state with current page
+    setPdfPage(page);
+    setTotalPages(total);
 
     setLinkModalData({
       mediaType: 'pdf',
       mediaInfo: {
-        page: pdfPage,
-        totalPages: totalPages
+        page: page,
+        totalPages: total,
+        anchorText: anchorText // Include selected text anchor
       },
       filePath: note.file_path
     });
     setShowLinkModal(true);
+  };
+
+  // Handle page changes from PdfViewer
+  const handlePdfPageChange = (newPage) => {
+    setPdfPage(newPage);
   };
 
   const handleInsertImageLink = () => {
@@ -272,70 +283,15 @@ function FileViewer({ note, onClose, onInsertLink, selectedText }) {
     }
 
     if (fileExt === 'pdf') {
-      if (iframeError) {
-        return (
-          <div className="file-error">
-            <h3>❌ Could Not Load PDF</h3>
-            <p>The PDF file could not be loaded. Possible reasons:</p>
-            <ul className="error-reasons">
-              <li>Backend server is not running (check <code>http://localhost:8000</code>)</li>
-              <li>PDF file was deleted from server</li>
-              <li>Your browser's PDF viewer is disabled</li>
-              <li>Network connection issue</li>
-              <li>File path: <code>{note.file_path}</code></li>
-            </ul>
-            <div className="error-actions">
-              <button onClick={() => setIframeError(false)} className="btn btn-secondary">
-                🔄 Retry
-              </button>
-              <a href={fileUrl} target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
-                🔗 Open in New Tab
-              </a>
-              <a href={fileUrl} download className="btn btn-primary">
-                📥 Download PDF
-              </a>
-            </div>
-          </div>
-        );
-      }
       return (
-        <div className="pdf-viewer">
-          <iframe
-            key={pdfPage}
-            src={`${fileUrl}#page=${pdfPage}`}
-            className="file-iframe"
-            title="PDF Viewer"
-            onLoad={() => {
-              console.log('[FileViewer] PDF loaded successfully:', fileUrl);
-            }}
-            onError={() => {
-              console.error('[FileViewer] PDF iframe failed to load:', fileUrl);
-              setIframeError(true);
-            }}
-          />
-          {onInsertLink && (
-            <div className="pdf-controls">
-              <button
-                className="btn-pdf-nav"
-                onClick={() => setPdfPage(Math.max(1, pdfPage - 1))}
-                title="Previous page"
-              >
-                ← Prev
-              </button>
-              <span className="pdf-page-indicator">Page {pdfPage}</span>
-              <button
-                className="btn-pdf-nav"
-                onClick={() => setPdfPage(pdfPage + 1)}
-                title="Next page"
-              >
-                Next →
-              </button>
-              <button className="btn-link-media" onClick={handleInsertPDFLink} title="Insert link to current page">
-                📌 Link to This Page
-              </button>
-            </div>
-          )}
-        </div>
+        <PdfViewer
+          fileUrl={fileUrl}
+          initialPage={pageNumber}
+          initialAnchor={anchorText}
+          onPageChange={handlePdfPageChange}
+          onInsertLink={onInsertLink ? handleInsertPDFLink : null}
+          isFullscreen={isFullscreen}
+        />
       );
     } else if (fileExt === 'ppt' || fileExt === 'pptx' || fileExt === 'doc' || fileExt === 'docx') {
       // Office files on localhost can't use Office Online viewer
@@ -396,6 +352,14 @@ function FileViewer({ note, onClose, onInsertLink, selectedText }) {
               )}
             </div>
             <div className="header-buttons">
+              <a 
+                href={fileUrl} 
+                download 
+                className="btn-download-header"
+                title="Download file"
+              >
+                📥
+              </a>
               <button 
                 className="btn-fullscreen" 
                 onClick={toggleFullscreen}
@@ -403,7 +367,7 @@ function FileViewer({ note, onClose, onInsertLink, selectedText }) {
               >
                 {isFullscreen ? '⤓' : '⤢'}
               </button>
-              <button className="btn-close" onClick={onClose}>
+              <button className="btn-close" onClick={onClose} title="Back to notes">
                 ✕
               </button>
             </div>
@@ -411,14 +375,14 @@ function FileViewer({ note, onClose, onInsertLink, selectedText }) {
 
           <div className="file-viewer-content">{renderViewer()}</div>
 
-          <div className="file-viewer-footer">
-            <a href={fileUrl} download className="btn btn-secondary">
-              📥 Download
-            </a>
-            <button className="btn btn-primary" onClick={onClose}>
-              ⬅ Back to Notes
-            </button>
-          </div>
+          {/* Footer hidden in fullscreen mode */}
+          {!isFullscreen && (
+            <div className="file-viewer-footer">
+              <div className="footer-info">
+                Press <kbd>F</kbd> for fullscreen • <kbd>ESC</kbd> to exit
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
