@@ -261,9 +261,7 @@ function FileViewer({ note, onClose, onInsertLink, selectedText }) {
             onLoadedMetadata={(e) => {
               if (initialTimestamp) {
                 e.target.currentTime = initialTimestamp;
-                console.log('[DEBUG] Video seeking to timestamp:', initialTimestamp);
               }
-              console.log('[FileViewer] Video loaded successfully:', fileUrl);
             }}
             onError={(e) => {
               console.error('[FileViewer] Video failed to load:', fileUrl, e);
