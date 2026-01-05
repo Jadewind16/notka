@@ -244,7 +244,6 @@ function NotebookPage() {
       : (note.file_path ? [note.file_path] : []);
     const files = filesArray.map(path => ({ path, name: extractFileName(path) }));
     setNoteFiles(files);
-    console.log('Loaded note with files:', files);
     // Focus immediately - no setTimeout needed
     requestAnimationFrame(() => {
       editorRef.current?.focus();
@@ -261,12 +260,8 @@ function NotebookPage() {
   // This ensures the debounced function always uses the latest state values
   const debouncedSave = useDebounce(async () => {
     if (!currentNote) {
-      console.log('[DEBUG] debouncedSave: No current note, skipping save');
       return;
     }
-
-    console.log('[DEBUG] debouncedSave triggered for note:', currentNote._id);
-    console.log('[DEBUG] Content being saved:', noteContent.substring(0, 200) + '...');
 
     try {
       setIsSaving(true);
@@ -274,11 +269,10 @@ function NotebookPage() {
         title: noteTitle,
         content: noteContent,
       });
-      console.log('[DEBUG] Save successful, response:', response);
       // Update notes list
       setNotes(notes.map(n => n._id === currentNote._id ? { ...n, title: noteTitle, content: noteContent } : n));
     } catch (error) {
-      console.error('[DEBUG] Failed to save note:', error);
+      console.error('Failed to save note:', error);
       alert('Failed to save note');
     } finally {
       setIsSaving(false);
@@ -297,9 +291,7 @@ function NotebookPage() {
     try {
       // Add file to the existing note (appends to files array)
       const updatedNote = await noteAPI.addFileToNote(currentNote._id, file);
-      
-      console.log('File uploaded, updated note:', updatedNote);
-      
+
       // Update current note with all files
       setCurrentNote(updatedNote);
       
@@ -387,7 +379,6 @@ function NotebookPage() {
       setViewerPage(page || 1);
       setShowFileViewer(true);
     } else {
-      console.warn('File not found in noteFiles:', filePath, 'Available files:', noteFiles);
       // Fallback: try to open the file anyway using the normalized path
       setViewerFile({
         title: extractFileName(normalizedFilePath),
@@ -502,13 +493,11 @@ function NotebookPage() {
           }
         } else {
           // Render as clickable link
-          console.log('Rendering link:', { text, filePath, page, timestamp, anchorText });
           parts.push(
             <span
               key={`link-${key++}`}
               className="file-link"
               onClick={() => {
-                console.log('Link clicked:', { filePath, page, timestamp, anchorText });
                 handleLinkClick(
                   filePath,
                   page ? parseInt(page) : null,
@@ -642,7 +631,6 @@ function NotebookPage() {
       noteContent.substring(position);
 
     setNoteContent(newContent);
-    console.log('[DEBUG] Inserted backward link:', markdownLink);
     debouncedSave();
 
     // Focus back to textarea and position cursor after the inserted link
@@ -670,17 +658,11 @@ function NotebookPage() {
     // Use angle brackets to handle special characters in filenames (e.g., parentheses)
     const embedCode = `\n\n![](<file://${file.path}>)\n\n`;
 
-    console.log('[DEBUG] handleInsertMedia - Inserting embed code:', embedCode);
-    console.log('[DEBUG] Current content length:', noteContent.length);
-
     // Insert at cursor position
     const newContent =
       noteContent.substring(0, cursorPosition) +
       embedCode +
       noteContent.substring(cursorPosition);
-
-    console.log('[DEBUG] New content length:', newContent.length);
-    console.log('[DEBUG] New content preview:', newContent.substring(0, 300));
 
     setNoteContent(newContent);
 
@@ -691,7 +673,6 @@ function NotebookPage() {
       textarea.setSelectionRange(newCursorPosition, newCursorPosition);
     }, 0);
 
-    console.log('[DEBUG] Calling debouncedSave...');
     // Auto-save with debounce
     debouncedSave();
   };
